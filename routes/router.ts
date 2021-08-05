@@ -1,26 +1,17 @@
 
 import {Router, Request, Response} from 'express';
 import Server from "../main/server";
-import {Socket} from "socket.io";
-import {connectedUsers, reactions} from "../sockets/sockets";
+import {connectedUsers, reactions, messages} from "../sockets/sockets";
 
 const router = Router();
-
-// Get messages
-router.get('/messages', (req: Request, res: Response) => {
-    res.json({
-        ok: true,
-        message: 'All ok!!'
-    });
-});
 
 // Send public message
 router.post('/messages', (req: Request, res: Response) => {
     const body = req.body.data;
-    const de = req.body.de;
+    const from = req.body.from;
 
     const payload = {
-        de,
+        from,
         body
     };
 
@@ -29,8 +20,8 @@ router.post('/messages', (req: Request, res: Response) => {
 
     res.json({
         ok: true,
+        from,
         body,
-        de
     });
 });
 
@@ -66,6 +57,14 @@ router.get('/reactions', (req: Request, res: Response) => {
     res.json({
         ok:true,
         reactions
+    });
+});
+
+// Get messages
+router.get('/messages', (req: Request, res: Response) => {
+    res.json({
+        ok: true,
+        messages
     });
 });
 

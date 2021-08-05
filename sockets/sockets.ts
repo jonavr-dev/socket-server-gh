@@ -11,6 +11,11 @@ export let reactions = {
     doubt: 0,
     change: ''
 };
+interface messageInterface {
+    from: string;
+    body: string;
+}
+export let messages: messageInterface[] = [];
 
 export const connectUser = (client: Socket, io: socketIO.Server) => {
     const user = new User(client.id);
@@ -27,9 +32,13 @@ export const disconnected = (client: Socket, io: socketIO.Server) => {
 }
 
 export const message = (client: Socket, socketIO: socketIO.Server) => {
-    client.on('message', (payload: {de: string, body: string}) => {
+    client.on('message', (payload: {from: string, body: string}) => {
         console.log('Received message  |>| ', payload.body);
         socketIO.emit('new-message', payload);
+        messages.push({
+            from: payload.from,
+            body: payload.body
+        });
     });
 }
 
